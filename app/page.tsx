@@ -51,7 +51,7 @@ export default function HomePage() {
               </svg>
             </div>
             <h3 className="text-xl font-semibold mb-2">Add Job Description</h3>
-            <p className="text-gray-600">Paste the job description you're targeting</p>
+            <p className="text-gray-600">Paste the job description you are targeting</p>
           </div>
 
           <div className="bg-white p-6 rounded-xl shadow-md text-center">

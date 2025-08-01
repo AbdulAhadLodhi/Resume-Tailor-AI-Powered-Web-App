@@ -78,7 +78,7 @@ export default function LoginPage() {
 
         <div className="mt-6 text-center">
           <p className="text-xs text-gray-500">
-            We'll send you a secure login link - no password required!
+            We&apos;ll send you a secure login link - no password required!
           </p>
         </div>
       </div>
