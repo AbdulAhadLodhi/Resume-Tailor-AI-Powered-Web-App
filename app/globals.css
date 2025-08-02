@@ -3,20 +3,7 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
-}
-
+/* Remove the default Next.js styling that might interfere */
 * {
   box-sizing: border-box;
   padding: 0;
@@ -27,16 +14,13 @@ html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
+  font-family: system-ui, -apple-system, sans-serif;
 }
 
+/* Remove the gradient background that might interfere with our design */
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  background: #f8fafc; /* Light gray background */
+  color: #1f2937; /* Dark gray text */
 }
 
 a {
@@ -44,8 +28,13 @@ a {
   text-decoration: none;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+/* Ensure buttons are clickable */
+button {
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
 }
