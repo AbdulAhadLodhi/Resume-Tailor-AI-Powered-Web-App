@@ -1,6 +1,6 @@
-// app/login/page.tsx
+// app/login/page.tsx - Debug Version
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabaseClient'
 import { useRouter } from 'next/navigation'
 
@@ -9,27 +9,54 @@ export default function LoginPage() {
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
+  const [debugInfo, setDebugInfo] = useState('')
   const router = useRouter()
+
+  useEffect(() => {
+    // Debug environment variables
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+    setDebugInfo(`
+      URL exists: ${!!url}
+      Key exists: ${!!key}
+      Supabase loaded: ${!!supabase}
+      URL: ${url ? url.substring(0, 20) + '...' : 'Missing'}
+    `)
+  }, [])
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setMessage('')
 
-    const { error } = await supabase.auth.signInWithOtp({
-      email,
-      options: {
-        emailRedirectTo: `${window.location.origin}/dashboard`
-      }
-    })
+    try {
+      console.log('Supabase client:', supabase)
 
-    if (error) {
-      setMessage(`Error: ${error.message}`)
+      if (!supabase) {
+        throw new Error('Supabase client not initialized')
+      }
+
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback`
+        }
+      })
+
+      if (error) {
+        setMessage(`Error: ${error.message}`)
+        setIsSuccess(false)
+      } else {
+        setMessage('Check your email for the login link!')
+        setIsSuccess(true)
+      }
+    } catch (err) {
+      console.error('Login error:', err)
+      setMessage(`Error: ${err instanceof Error ? err.message : 'Unknown error'}`)
       setIsSuccess(false)
-    } else {
-      setMessage('Check your email for the login link!')
-      setIsSuccess(true)
     }
+
     setLoading(false)
   }
 
@@ -39,6 +66,11 @@ export default function LoginPage() {
         <div className="text-center mb-6">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Resume Tailor</h1>
           <p className="text-gray-600">Sign in to optimize your resume</p>
+        </div>
+
+        {/* Debug Info */}
+        <div className="mb-4 p-2 bg-gray-100 rounded text-xs">
+          <pre>{debugInfo}</pre>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-6">
