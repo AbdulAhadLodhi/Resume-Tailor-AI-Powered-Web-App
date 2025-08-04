@@ -1,31 +1,29 @@
-'use client'
-
-import { useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import { supabase } from '../../../lib/supabase'
+"use client";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { supabase } from "../../../lib/supabase";
 
 export default function AuthCallback() {
-  const router = useRouter()
+  const router = useRouter();
 
   useEffect(() => {
     const handleAuthCallback = async () => {
-      const { data, error } = await supabase.auth.getSession()
+      // Wait for any hash-based auth to be processed
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      if (error) {
-        console.error('Error during auth callback:', error)
-        router.push('/?error=auth_callback_error')
-        return
-      }
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
 
-      if (data.session) {
-        router.push('/dashboard')
+      if (session) {
+        router.push("/dashboard");
       } else {
-        router.push('/')
+        router.push("/");
       }
-    }
+    };
 
-    handleAuthCallback()
-  }, [router])
+    handleAuthCallback();
+  }, [router]);
 
   return (
     <div className="min-h-screen flex items-center justify-center">
@@ -34,5 +32,5 @@ export default function AuthCallback() {
         <p className="text-gray-600">Completing authentication...</p>
       </div>
     </div>
-  )
+  );
 }
